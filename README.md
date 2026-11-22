@@ -24,6 +24,12 @@ php -S 127.0.0.1:8000 router.php
 
 Open http://127.0.0.1:8000 and choose **Set up this wiki** to create an administrator. KioWiki automatically creates its database and starter articles on the first request. Article URLs, outlines, topics, history, and search are generated from the stored content. For example, the starter dinosaur article is at `/articles/dinosaurs`.
 
+## Install on InfinityFree without FTP
+
+In InfinityFree’s browser file manager, open your domain’s `htdocs` and select **Upload and Extract**. Choose [KioWiki-InfinityFree.zip](deploy/KioWiki-InfinityFree.zip?raw=true). The ZIP contains the application at its root.
+
+Visit your wiki. It creates storage automatically and opens the administrator setup screen. Use the same file manager to open `htdocs/.kiowiki/setup.key` and paste the key into the form. This proves you control the hosting files. KioWiki remembers the address you used during setup, including a subdirectory if present. Email delivery still requires an external SMTP account.
+
 ## Install on a server
 
 1. Copy the project files, including the hidden `.htaccess` files, to the wiki's document root. Omit `.git`. Use Apache 2.4 with PHP and `mod_rewrite`, or use [the NGINX example](deploy/nginx.conf) with PHP-FPM. Change its document root, hostname, and PHP-FPM socket for your server and enable HTTPS.
@@ -39,7 +45,7 @@ Copy [config.example.php](config.example.php) to `config.php` to set overrides. 
 
 KioWiki uses a single transactional state document with a write lock. This is intended for small, single-site wikis. Memory usage and write time grow with the size of the wiki and its revision history. Administration can export a private JSON backup containing articles, users and password hashes. To restore or migrate that backup, stop writes, put it at a new protected `json_path`, and set the driver to `json` before restarting. Back up the original backend, keep exports private, and leave config files out of Git.
 
-Account email supports SMTP with certificate-validated STARTTLS or implicit TLS, or the host's PHP `mail()` transport. Set `base_url` to the public wiki root, including its subdirectory if applicable. Configure either the `smtp` block or `mail_from` for PHP mail, then send a test from Administration. Password recovery and optional signup verification use expiring, single-use links. The PHP host must permit its configured mail transport. SMTP mode requires OpenSSL and outbound access to the mail service.
+Account email supports SMTP with certificate-validated STARTTLS or implicit TLS, or the host's PHP `mail()` transport. KioWiki remembers the public wiki address at first setup. Set `base_url` to override it or to configure an older installation. Configure either the `smtp` block or `mail_from` for PHP mail, then send a test from Administration. Password recovery and optional signup verification use expiring, single-use links. The PHP host must permit its configured mail transport. SMTP mode requires OpenSSL and outbound access to the mail service.
 
 ## Wiki tools
 

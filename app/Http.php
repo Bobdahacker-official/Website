@@ -94,11 +94,22 @@ function throttle(Store $store, string $scope, int $maximum, int $window): void
     });
 }
 
+function detectedOrigin(): string
+{
+    global $base, $secure;
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    $scheme = $secure ? 'https' : 'http';
+    if (!preg_match('/^(?:[a-z0-9.-]+|\[[a-f0-9:]+\])(?::[0-9]{1,5})?$/iD', $host)) {
+        return '';
+    }
+    return $scheme . '://' . $host . $base;
+}
+
 function accountMail(Store $store, array $config, array $user, string $type): void
 {
     $key = bin2hex(random_bytes(32));
     $digest = hash('sha256', $key);
-    $origin = rtrim((string) ($config['base_url'] ?? ''), '/');
+    $origin = rtrim((string) ($config['base_url'] ?? $store->read()['settings']['base_url'] ?? ''), '/');
     if (!filter_var($origin, FILTER_VALIDATE_URL) || !preg_match('~^https?://[^?#]+$~iD', $origin)) {
         throw new RuntimeException('Configure an absolute base_url before enabling account email.');
     }
@@ -197,12 +208,16 @@ function handlePost(Store $store, array $config, array $state, ?array $user, str
             fail(422, 'Use a valid email and a username of 3–40 letters, digits, dots, underscores, or hyphens.');
         }
         $password = password_hash(passwordInput(), PASSWORD_DEFAULT);
-        $candidate = $store->change(static function (&$fresh) use ($name, $email, $password, $setup) {
+        $origin = $setup ? detectedOrigin() : '';
+        $candidate = $store->change(static function (&$fresh) use ($name, $email, $password, $setup, $origin) {
             if ($setup ? $fresh['users'] !== [] : (!$fresh['settings']['registration'] || $fresh['users'] === [])) {
                 fail(403, 'Account creation is unavailable.');
             }
             if (findUser($fresh, $name) || findUser($fresh, $email)) {
                 fail(409, 'That username or email is already in use.');
+            }
+            if ($setup && $origin !== '') {
+                $fresh['settings']['base_url'] = $origin;
             }
             $id = bin2hex(random_bytes(12));
             $role = $setup ? 'admin' : 'member';
@@ -394,14 +409,14 @@ function adminPost(Store $store, array $config): never
             if ($name === '' || !isset($state['pages'][$home]) || $state['pages'][$home]['deleted']) {
                 fail(422, 'Enter a site name and choose a published homepage.');
             }
-            if (isset($_POST['verification']) && (empty($config['base_url']) || empty($config['smtp']['from'] ?? $config['mail_from'] ?? ''))) {
+            if (isset($_POST['verification']) && (empty($config['base_url'] ?? $state['settings']['base_url'] ?? '') || empty($config['smtp']['from'] ?? $config['mail_from'] ?? ''))) {
                 fail(422, 'Configure the wiki URL and mail sender before requiring verification.');
             }
             $settings = compact('name', 'description', 'home');
             foreach (['registration', 'editors_only', 'private', 'verification'] as $flag) {
                 $settings[$flag] = isset($_POST[$flag]);
             }
-            $state['settings'] = $settings;
+            $state['settings'] = array_replace($state['settings'], $settings);
             audit($state, $actor, 'Updated wiki settings');
         } elseif ($action === 'user') {
             $id = input('id', 24);
@@ -501,6 +516,9 @@ try {
     if (!in_array($_SERVER['REQUEST_METHOD'] ?? 'GET', ['GET', 'HEAD'], true)) {
         header('Allow: GET, HEAD, POST');
         fail(405, 'Method not allowed.');
+    }
+    if ($route === '' && $state['users'] === [] && !empty($config['setup_on_home'])) {
+        redirect(url('setup'));
     }
     renderRoute($route, $state, $user, $store->driver());
 } catch (HttpError $error) {

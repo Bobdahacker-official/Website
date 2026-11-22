@@ -366,7 +366,7 @@ function accountView(string $route, array $state, ?array $user): array
         <?php if ($route === 'setup'):
             $local = PHP_SAPI === 'cli-server' && in_array($_SERVER['REMOTE_ADDR'] ?? '', ['127.0.0.1', '::1'], true);
             if (!$local): ?>
-                <p class="muted">Read <code>setup.key</code> in the private data directory to claim administrator access.</p>
+                <p class="muted">Open <code>.kiowiki/setup.key</code> in your hosting file manager and paste the key below. Enable hidden files if needed.</p>
                 <?= field('setup_key', 'Installation key', '', 'password', 'required autocomplete="off"') ?>
             <?php endif;
         endif;
