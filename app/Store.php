@@ -14,7 +14,7 @@ final class Store
             // Keep an existing automatic installation on its original backend.
             $sqlite = $config['sqlite_path'] ?? $data . '/wiki.sqlite';
             $json = $config['json_path'] ?? $data . '/wiki.json';
-            $available = class_exists(PDO::class) && in_array('sqlite', PDO::getAvailableDrivers(), true);
+            $available = method_exists(PDO::class, 'getAvailableDrivers') && in_array('sqlite', PDO::getAvailableDrivers(), true);
             $this->driver = is_file($sqlite) || (!is_file($json) && $available) ? 'sqlite' : 'json';
         }
 
