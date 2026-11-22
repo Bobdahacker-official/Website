@@ -1,0 +1,13 @@
+DirectoryIndex index.php
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule "(^|/)\." - [F,L]
+    RewriteRule "^(app|deploy)(/|$)" - [F,L,NC]
+    RewriteRule "^(config(\.example)?|router)\.php$" - [F,L,NC]
+    RewriteRule "^assets/[A-Za-z0-9_-]+\.(css|js)$" - [L]
+    RewriteRule "^index\.php$" - [L]
+    RewriteRule "^" index.php [L]
+</IfModule>
+<FilesMatch "^((?!index\.php$).+\.(php|sqlite|json|lock|key)|\.htaccess|\.gitignore)$">
+    Require all denied
+</FilesMatch>
