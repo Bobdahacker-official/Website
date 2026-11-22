@@ -2,6 +2,20 @@
 
 KioWiki is a self-hosted collaborative wiki built in PHP, HTML, CSS, and vanilla JavaScript. It requires PHP 8.1 or newer and a writable data directory. There is no Composer or npm install, build step, CDN, or framework.
 
+## Screenshots
+
+[![KioWiki homepage](docs/screenshots/overview.webp)](docs/screenshots/overview.webp)
+
+| | |
+| --- | --- |
+| **Dinosaurs article with a section outline**<br><a href="docs/screenshots/article.webp"><img src="docs/screenshots/article.webp" alt="Dinosaurs article with a section outline" width="440"></a> | **Article directory**<br><a href="docs/screenshots/article-directory.webp"><img src="docs/screenshots/article-directory.webp" alt="Article directory" width="440"></a> |
+| **Search results for fossils**<br><a href="docs/screenshots/search-results.webp"><img src="docs/screenshots/search-results.webp" alt="Search results for fossils" width="440"></a> | **Topic directory**<br><a href="docs/screenshots/topics.webp"><img src="docs/screenshots/topics.webp" alt="Topic directory" width="440"></a> |
+| **Markdown editor and live preview**<br><a href="docs/screenshots/markdown-editor.webp"><img src="docs/screenshots/markdown-editor.webp" alt="Markdown editor and live preview" width="440"></a> | **Article revision history**<br><a href="docs/screenshots/revision-history.webp"><img src="docs/screenshots/revision-history.webp" alt="Article revision history" width="440"></a> |
+| **Article discussion**<br><a href="docs/screenshots/discussion.webp"><img src="docs/screenshots/discussion.webp" alt="Article discussion" width="440"></a> | **Recent changes**<br><a href="docs/screenshots/recent-changes.webp"><img src="docs/screenshots/recent-changes.webp" alt="Recent changes" width="440"></a> |
+| **Watched articles**<br><a href="docs/screenshots/watchlist.webp"><img src="docs/screenshots/watchlist.webp" alt="Watched articles" width="440"></a> | **Watch notifications**<br><a href="docs/screenshots/notifications.webp"><img src="docs/screenshots/notifications.webp" alt="Watch notifications" width="440"></a> |
+| **Sign-in form**<br><a href="docs/screenshots/sign-in.webp"><img src="docs/screenshots/sign-in.webp" alt="Sign-in form" width="440"></a> | **Signup form**<br><a href="docs/screenshots/sign-up.webp"><img src="docs/screenshots/sign-up.webp" alt="Signup form" width="440"></a> |
+| **Administration settings**<br><a href="docs/screenshots/administration.webp"><img src="docs/screenshots/administration.webp" alt="Administration settings" width="440"></a> | **Mobile article in dark mode**<br><a href="docs/screenshots/mobile-dark.webp"><img src="docs/screenshots/mobile-dark.webp" alt="Mobile article in dark mode" width="140"></a> |
+
 ## Start locally
 
 ```sh
